@@ -12,6 +12,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
-  }
+    },
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "types": ["jest", "node", "@testing-library/jest-dom"]
+  },
+  "include": ["src", "jest.setup.js", "**/*.test.ts", "**/*.test.tsx"]
 }
