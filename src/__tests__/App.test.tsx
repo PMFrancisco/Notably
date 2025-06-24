@@ -14,9 +14,10 @@ describe('Notably App', () => {
   it('renders the Notably popup without crashing', async () => {
     render(<App />);
     
-    // Wait for the component to load
+    // Wait for the component to load and check for main elements
     await waitFor(() => {
       expect(screen.getByText('Notably')).toBeInTheDocument();
+      expect(screen.getByText('All Notes')).toBeInTheDocument();
     });
   });
 
@@ -25,20 +26,22 @@ describe('Notably App', () => {
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
-  it('displays the current URL after loading', async () => {
+  it('displays the current URL hostname after loading', async () => {
     render(<App />);
     
     await waitFor(() => {
-      expect(screen.getByText('https://example.com')).toBeInTheDocument();
+      // The app displays the hostname, not the full URL
+      expect(screen.getByText('example.com')).toBeInTheDocument();
     });
   });
 
-  it('has input fields for title and note', async () => {
+  it('has input fields for title, note, and tags', async () => {
     render(<App />);
     
     await waitFor(() => {
       expect(screen.getByPlaceholderText('Note title (optional)')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Write your note here...')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('tag1, tag2, tag3...')).toBeInTheDocument();
     });
   });
 
