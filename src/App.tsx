@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import browser from 'webextension-polyfill'
 import { 
   Card, 
   CardHeader, 
@@ -13,144 +12,91 @@ import {
   Badge,
   Separator
 } from './components/ui'
-
-interface Note {
-  title: string;
-  content: string;
-  url: string;
-  timestamp: number;
-  tags?: string[];
-}
+import { 
+  Note,
+  formatDate,
+  parseTags,
+  formatTagsForInput,
+  getHostnameFromUrl,
+  exportNotesToJson
+} from './utils'
+import { useNotes, useCurrentTab } from './hooks'
 
 function App() {
   const [title, setTitle] = useState('')
   const [note, setNote] = useState('')
   const [tags, setTags] = useState('')
-  const [currentUrl, setCurrentUrl] = useState('')
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
-  const [savedNote, setSavedNote] = useState<Note | null>(null)
   const [showAllNotes, setShowAllNotes] = useState(false)
-  const [allNotes, setAllNotes] = useState<{ [key: string]: Note }>({})
 
-  // Get current tab URL and load existing note
+  const { currentUrl, isLoading } = useCurrentTab()
+  const { 
+    savedNote, 
+    allNotes, 
+    isSaving, 
+    saveNote, 
+    loadNoteForUrl, 
+    loadAllNotesData, 
+    deleteNote,
+    clearCurrentNote
+  } = useNotes()
+
+  // Load existing note when URL is available
   useEffect(() => {
-    const getCurrentTab = async () => {
+    const loadExistingNote = async () => {
+      if (!currentUrl) return
+      
       try {
-        const tabs = await browser.tabs.query({ active: true, currentWindow: true })
-        if (tabs[0]?.url) {
-          const url = tabs[0].url
-          setCurrentUrl(url)
-          
-          // Load existing note for this URL
-          const result = await browser.storage.sync.get(url)
-          if (result[url]) {
-            const existingNote = result[url] as Note
-            setSavedNote(existingNote)
-            setTitle(existingNote.title)
-            setNote(existingNote.content)
-            setTags(existingNote.tags?.join(', ') || '')
-          }
+        const existingNote = await loadNoteForUrl(currentUrl)
+        if (existingNote) {
+          setTitle(existingNote.title)
+          setNote(existingNote.content)
+          setTags(formatTagsForInput(existingNote.tags || []))
         }
       } catch (error) {
-        console.error('Error getting current tab:', error)
-      } finally {
-        setIsLoading(false)
+        console.error('Error loading existing note:', error)
       }
     }
 
-    getCurrentTab()
-  }, [])
+    loadExistingNote()
+  }, [currentUrl, loadNoteForUrl])
 
   // Load all notes when viewing the list
-  const loadAllNotes = async () => {
-    try {
-      const result = await browser.storage.sync.get(null)
-      setAllNotes(result as { [key: string]: Note })
-    } catch (error) {
-      console.error('Error loading all notes:', error)
-    }
-  }
-
   useEffect(() => {
     if (showAllNotes) {
-      loadAllNotes()
+      loadAllNotesData()
     }
-  }, [showAllNotes])
+  }, [showAllNotes, loadAllNotesData])
 
-  const saveNote = async () => {
-    if (!currentUrl || (!title.trim() && !note.trim())) return
-
-    setIsSaving(true)
+  const handleSaveNote = async () => {
+    if (!currentUrl) return
     
-    const noteData: Note = {
-      title: title.trim(),
-      content: note.trim(),
-      url: currentUrl,
-      timestamp: Date.now(),
-      tags: tags.split(',').map(tag => tag.trim()).filter(Boolean)
-    }
-
-    try {
-      await browser.storage.sync.set({ [currentUrl]: noteData })
-      setSavedNote(noteData)
-    } catch (error) {
-      console.error('Error saving note:', error)
-    } finally {
-      setIsSaving(false)
-    }
+    const parsedTags = parseTags(tags)
+    await saveNote(currentUrl, title, note, parsedTags)
   }
 
-  const deleteNote = async () => {
+  const handleDeleteNote = async () => {
     if (!currentUrl) return
 
-    try {
-      await browser.storage.sync.remove(currentUrl)
-      setSavedNote(null)
-      setTitle('')
-      setNote('')
-      setTags('')
-    } catch (error) {
-      console.error('Error deleting note:', error)
-    }
+    await deleteNote(currentUrl)
+    setTitle('')
+    setNote('')
+    setTags('')
   }
 
-  const deleteNoteById = async (url: string) => {
-    try {
-      await browser.storage.sync.remove(url)
-      await loadAllNotes() // Refresh the list
-    } catch (error) {
-      console.error('Error deleting note:', error)
-    }
+  const handleDeleteNoteById = async (url: string) => {
+    await deleteNote(url)
+    await loadAllNotesData() // Refresh the list
   }
 
-  const exportNotes = async () => {
+  const handleExportNotes = async () => {
     try {
-      const result = await browser.storage.sync.get(null)
-      const dataStr = JSON.stringify(result, null, 2)
-      const dataBlob = new Blob([dataStr], { type: 'application/json' })
-      
-      const url = URL.createObjectURL(dataBlob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `notably-export-${new Date().toISOString().split('T')[0]}.json`
-      link.click()
-      URL.revokeObjectURL(url)
+      await exportNotesToJson()
     } catch (error) {
       console.error('Error exporting notes:', error)
     }
   }
 
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
-
-  const parsedTags = tags.split(',').map(tag => tag.trim()).filter(Boolean)
+  const parsedTags = parseTags(tags)
 
   if (isLoading) {
     return (
@@ -198,7 +144,7 @@ function App() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => deleteNoteById(url)}
+                        onClick={() => handleDeleteNoteById(url)}
                         className="h-6 w-6 p-0 text-destructive hover:text-destructive"
                       >
                         ×
@@ -209,7 +155,7 @@ function App() {
                     </p>
                     <div className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground truncate flex-1">
-                        {new URL(url).hostname}
+                        {getHostnameFromUrl(url)}
                       </span>
                       <span className="text-muted-foreground">
                         {formatDate(note.timestamp)}
@@ -234,7 +180,7 @@ function App() {
           
           <CardFooter className="pt-3">
             <Button 
-              onClick={exportNotes} 
+              onClick={handleExportNotes} 
               variant="outline" 
               size="sm"
               fullWidth
@@ -262,7 +208,7 @@ function App() {
             </Button>
           </div>
           <div className="text-xs text-muted-foreground truncate" title={currentUrl}>
-            {currentUrl ? new URL(currentUrl).hostname : 'No URL'}
+            {currentUrl ? getHostnameFromUrl(currentUrl) : 'No URL'}
           </div>
         </CardHeader>
 
@@ -315,7 +261,7 @@ function App() {
 
         <CardFooter className="flex justify-between pt-3">
           <Button
-            onClick={saveNote}
+            onClick={handleSaveNote}
             disabled={isSaving || (!title.trim() && !note.trim())}
             size="sm"
             className="flex-1 mr-2"
@@ -327,7 +273,7 @@ function App() {
             <Button
               variant="destructive"
               size="sm"
-              onClick={deleteNote}
+              onClick={handleDeleteNote}
               disabled={isSaving}
             >
               Delete
