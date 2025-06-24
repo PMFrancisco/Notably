@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
+    "build-ts": "tsc -b && vite build",
+    "build:cross-browser": "npm run build && node scripts/build-manifests.js",
+    "build:chrome": "npm run build:cross-browser && echo 'Chrome build ready in dist-chrome/'",
+    "build:firefox": "npm run build:cross-browser && echo 'Firefox build ready in dist-firefox/'",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest"

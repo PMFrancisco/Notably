@@ -17,7 +17,8 @@
     }
   },
   "background": {
-    "page": "background.html"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {

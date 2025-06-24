@@ -1,6 +1,6 @@
 const browser = {
   runtime: {
-    sendMessage: jest.fn(),
+    sendMessage: jest.fn().mockResolvedValue({}),
     onMessage: {
       addListener: jest.fn(),
       removeListener: jest.fn()
@@ -8,20 +8,27 @@ const browser = {
   },
   storage: {
     sync: {
-      get: jest.fn(),
-      set: jest.fn(),
-      remove: jest.fn()
+      get: jest.fn().mockResolvedValue({}),
+      set: jest.fn().mockResolvedValue(undefined),
+      remove: jest.fn().mockResolvedValue(undefined)
     },
     local: {
-      get: jest.fn(),
-      set: jest.fn(),
-      remove: jest.fn()
+      get: jest.fn().mockResolvedValue({}),
+      set: jest.fn().mockResolvedValue(undefined),
+      remove: jest.fn().mockResolvedValue(undefined)
     }
   },
   tabs: {
-    query: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn()
+    query: jest.fn().mockResolvedValue([
+      {
+        id: 1,
+        url: 'https://example.com',
+        title: 'Example Site',
+        active: true
+      }
+    ]),
+    create: jest.fn().mockResolvedValue({}),
+    update: jest.fn().mockResolvedValue({})
   }
 };
 
