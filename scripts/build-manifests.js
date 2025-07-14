@@ -3,20 +3,20 @@
 import fs from 'fs';
 import path from 'path';
 
-// Función para copiar archivos
+// Function to copy files
 function copyFile(src, dest) {
   fs.copyFileSync(src, dest);
   console.log(`✓ Copied ${src} to ${dest}`);
 }
 
-// Función para crear directorio si no existe
+// Function to create directory if it doesn't exist
 function ensureDir(dir) {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 }
 
-// Función para copiar directorio recursivamente
+// Function to copy directory recursively
 function copyDir(src, dest) {
   ensureDir(dest);
   const entries = fs.readdirSync(src, { withFileTypes: true });
@@ -38,21 +38,21 @@ function buildForBrowser(browser) {
   
   const distDir = `dist-${browser}`;
   
-  // Limpiar directorio de destino
+  // Clean destination directory
   if (fs.existsSync(distDir)) {
     fs.rmSync(distDir, { recursive: true });
   }
   
-  // Copiar todo el contenido de dist
+  // Copy all contents from dist
   copyDir('dist', distDir);
   
-  // Copiar el manifest específico
+  // Copy the specific manifest
   const manifestSrc = `public/manifest-${browser}.json`;
   const manifestDest = `${distDir}/manifest.json`;
   
   copyFile(manifestSrc, manifestDest);
   
-  // Para Firefox, también copiar background.html
+  // For Firefox, also copy background.html
   if (browser === 'firefox') {
     copyFile('public/background.html', `${distDir}/background.html`);
   }
@@ -60,17 +60,17 @@ function buildForBrowser(browser) {
   console.log(`✅ Build for ${browser} completed in ${distDir}/`);
 }
 
-// Función principal
+// Main function
 function main() {
   console.log('🚀 Building cross-browser extension...');
   
-  // Verificar que existe el directorio dist base
+  // Check that the base dist directory exists
   if (!fs.existsSync('dist')) {
     console.error('❌ dist directory not found. Run npm run build first.');
     process.exit(1);
   }
   
-  // Build para cada navegador
+  // Build for each browser
   buildForBrowser('chrome');
   buildForBrowser('firefox');
   

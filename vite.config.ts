@@ -23,5 +23,5 @@ export default defineConfig({
     copyPublicDir: true
   },
   publicDir: 'public',
-  base: './' // Para que las rutas sean relativas en las extensiones
+  base: './' // So that the paths are relative in the extensions
 });
