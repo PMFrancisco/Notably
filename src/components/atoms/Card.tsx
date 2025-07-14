@@ -5,7 +5,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {}
 const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className = '', ...props }, ref) => {
     const classes = [
-      'rounded-lg border bg-card text-card-foreground shadow-sm',
+      'rounded-lg border bg-card text-card-foreground',
       className
     ].filter(Boolean).join(' ');
 
