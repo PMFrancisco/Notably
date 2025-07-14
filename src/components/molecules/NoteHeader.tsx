@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, ThemeSelector } from '../atoms'
+import { Button } from '../atoms'
+import { ThemeSelector } from '../molecules'
 
 interface NoteHeaderProps {
   title: string
