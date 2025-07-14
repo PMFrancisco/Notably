@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Card, CardContent, CardFooter, Button, Separator } from '../atoms'
 import { FormField, TagDisplay } from '../molecules'
-import { parseTags, formatTagsForInput } from '../../utils'
-
-interface NoteFormData {
-  title: string
-  content: string
-  tags: string[]
-}
+import { useNoteForm } from '../../hooks'
+import { NoteFormData } from '../../types'
 
 interface NoteFormProps {
   initialData?: Partial<NoteFormData>
@@ -26,31 +21,22 @@ export const NoteForm: React.FC<NoteFormProps> = ({
   saveButtonText = 'Save Note',
   showDeleteButton = false
 }) => {
-  const [title, setTitle] = useState(initialData?.title || '')
-  const [content, setContent] = useState(initialData?.content || '')
-  const [tags, setTags] = useState(
-    initialData?.tags ? formatTagsForInput(initialData.tags) : ''
-  )
-
-  useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title || '')
-      setContent(initialData.content || '')
-      setTags(initialData.tags ? formatTagsForInput(initialData.tags) : '')
-    }
-  }, [initialData])
-
-  const handleSave = () => {
-    const parsedTags = parseTags(tags)
-    onSave({
-      title,
-      content,
-      tags: parsedTags
-    })
-  }
-
-  const parsedTags = parseTags(tags)
-  const isFormValid = title.trim() || content.trim()
+  const {
+    title,
+    content,
+    tags,
+    setTitle,
+    setContent,
+    setTags,
+    handleSave,
+    handleDelete,
+    parsedTags,
+    isFormValid
+  } = useNoteForm({
+    initialData,
+    onSave,
+    onDelete
+  })
 
   return (
     <Card className="h-full rounded-none border-none">
@@ -104,7 +90,7 @@ export const NoteForm: React.FC<NoteFormProps> = ({
           <Button
             variant="destructive"
             size="sm"
-            onClick={onDelete}
+            onClick={handleDelete}
             disabled={isSaving}
           >
             Delete

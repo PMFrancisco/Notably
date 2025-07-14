@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardHeader, Separator } from '../atoms'
+import { Card, CardHeader } from '../atoms'
 import { NoteHeader } from '../molecules'
 import { NotesList } from '../organisms'
 import { Note } from '../../types'
