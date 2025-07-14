@@ -84,19 +84,22 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) 
       {/* Current theme button */}
       <button
         onClick={handleCurrentThemeClick}
-        className="w-6 h-6 rounded-full border-2 border-foreground transition-all hover:scale-110 relative z-10"
+        className="w-6 h-6 rounded-full border-2 border-foreground transition-all hover:scale-110 relative z-10 flex items-center justify-center"
         style={{ backgroundColor: currentThemeData?.color }}
         title={`Current theme: ${currentThemeData?.name}. Click to change`}
       />
       
       {/* Dropdown with all themes */}
       <div 
-        className={`absolute top-0 right-0 flex gap-1 transition-all duration-300 ease-out ${
+        className={`absolute flex items-center gap-1 transition-all duration-300 ease-out ${
           isOpen 
             ? 'transform translate-x-0 opacity-100' 
             : 'transform translate-x-full opacity-0 pointer-events-none'
         }`}
         style={{
+          top: '0px',
+          right: '32px', // Move dropdown to the left of the current theme button (24px width + 8px gap)
+          height: '24px', // Match the height of the current theme button
           zIndex: 5,
         }}
       >
@@ -105,7 +108,7 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className = '' }) 
           <button
             key={theme.id}
             onClick={() => handleThemeChange(theme.id)}
-            className={`w-6 h-6 rounded-full border-2 transition-all hover:scale-110 ${
+            className={`w-6 h-6 rounded-full border-2 transition-all hover:scale-110 flex items-center justify-center ${
               theme.id === currentTheme 
                 ? 'border-foreground scale-110' 
                 : 'border-transparent hover:border-foreground/50'
