@@ -1,4 +1,13 @@
-# 0.1.0 (2025-07-14)
+# [0.2.0](https://github.com/PMFrancisco/Notably/compare/v0.1.0...v0.2.0) (2025-07-14)
+
+
+### Features
+
+* add theme selector ([2045518](https://github.com/PMFrancisco/Notably/commit/2045518dd41de8b8afc2533b52333cf3311e3175))
+
+
+
+# [0.1.0](https://github.com/PMFrancisco/Notably/compare/f75dbca44d31938b32b8504ce39d53f0ad431e05...v0.1.0) (2025-07-14)
 
 
 ### Bug Fixes
