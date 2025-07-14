@@ -16,8 +16,8 @@ function ensureDir(dir) {
   }
 }
 
-// Function to copy directory recursively
-function copyDir(src, dest) {
+// Function to copy directory recursively with exclusions
+function copyDir(src, dest, excludeFiles = []) {
   ensureDir(dest);
   const entries = fs.readdirSync(src, { withFileTypes: true });
   
@@ -25,8 +25,14 @@ function copyDir(src, dest) {
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
     
+    // Skip excluded files
+    if (excludeFiles.includes(entry.name)) {
+      console.log(`⏭️  Skipped ${entry.name} (not needed for this browser)`);
+      continue;
+    }
+    
     if (entry.isDirectory()) {
-      copyDir(srcPath, destPath);
+      copyDir(srcPath, destPath, excludeFiles);
     } else {
       fs.copyFileSync(srcPath, destPath);
     }
@@ -43,26 +49,54 @@ function buildForBrowser(browser) {
     fs.rmSync(distDir, { recursive: true });
   }
   
-  // Copy all contents from dist
-  copyDir('dist', distDir);
+  // Define files to exclude based on browser
+  const excludeFiles = [
+    'manifest.json',          // Generic manifest (we'll copy the specific one)
+    'manifest-chrome.json',   // Chrome-specific manifest
+    'manifest-firefox.json'   // Firefox-specific manifest
+  ];
   
-  // Copy the specific manifest
+  if (browser === 'chrome') {
+    // Chrome doesn't need background.html
+    excludeFiles.push('background.html');
+  }
+  
+  // Copy all contents from dist, excluding unnecessary files
+  copyDir('dist', distDir, excludeFiles);
+  
+  // Copy the correct manifest as manifest.json
   const manifestSrc = `public/manifest-${browser}.json`;
   const manifestDest = `${distDir}/manifest.json`;
   
-  copyFile(manifestSrc, manifestDest);
+  if (fs.existsSync(manifestSrc)) {
+    copyFile(manifestSrc, manifestDest);
+  } else {
+    console.error(`❌ Manifest file not found: ${manifestSrc}`);
+    process.exit(1);
+  }
   
-  // For Firefox, also copy background.html
+  // For Firefox, copy background.html if it doesn't already exist
   if (browser === 'firefox') {
-    copyFile('public/background.html', `${distDir}/background.html`);
+    const backgroundSrc = 'public/background.html';
+    const backgroundDest = `${distDir}/background.html`;
+    
+    if (fs.existsSync(backgroundSrc) && !fs.existsSync(backgroundDest)) {
+      copyFile(backgroundSrc, backgroundDest);
+    }
   }
   
   console.log(`✅ Build for ${browser} completed in ${distDir}/`);
+  
+  // Show summary of files in build
+  const files = fs.readdirSync(distDir);
+  const jsFiles = files.filter(f => f.endsWith('.js')).length;
+  const totalFiles = files.length;
+  console.log(`📊 ${totalFiles} files total (${jsFiles} JS files)`);
 }
 
 // Main function
 function main() {
-  console.log('🚀 Building cross-browser extension...');
+  console.log('🚀 Building optimized cross-browser extension...');
   
   // Check that the base dist directory exists
   if (!fs.existsSync('dist')) {
@@ -74,9 +108,11 @@ function main() {
   buildForBrowser('chrome');
   buildForBrowser('firefox');
   
-  console.log('\n🎉 Cross-browser build completed!');
-  console.log('📁 Chrome build: dist-chrome/');
-  console.log('📁 Firefox build: dist-firefox/');
+  console.log('\n🎉 Optimized cross-browser build completed!');
+  console.log('📁 Chrome build: dist-chrome/ (optimized for Chrome)');
+  console.log('📁 Firefox build: dist-firefox/ (optimized for Firefox)');
+  console.log('\n💡 Each build now contains only the files needed for that browser.');
+  console.log('🧹 Removed unnecessary manifest files from each build.');
 }
 
 main(); 
