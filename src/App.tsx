@@ -5,11 +5,6 @@ import {
   LoadingTemplate
 } from './components'
 import { 
-  Note,
-  formatDate,
-  parseTags,
-  formatTagsForInput,
-  getHostnameFromUrl,
   exportNotesToJson
 } from './utils'
 import { useNotes, useCurrentTab } from './hooks'
@@ -25,8 +20,7 @@ function App() {
     saveNote, 
     loadNoteForUrl, 
     loadAllNotesData, 
-    deleteNote,
-    clearCurrentNote
+    deleteNote
   } = useNotes()
 
   // Theme initialization is now handled by ThemeSelector component
