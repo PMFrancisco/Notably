@@ -1,13 +1,19 @@
 {
   "manifest_version": 3,
   "name": "Notably",
-  "version": "0.0.0",
+  "version": "0.2.0",
   "description": "Browser extension for note taking on any website",
   "permissions": [
     "storage",
     "tabs",
     "activeTab"
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "notably@pmfrancisco.dev",
+      "strict_min_version": "109.0"
+    }
+  },
   "action": {
     "default_popup": "index.html",
     "default_icon": {

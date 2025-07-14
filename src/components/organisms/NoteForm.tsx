@@ -89,7 +89,6 @@ export const NoteForm: React.FC<NoteFormProps> = ({
         <TagDisplay tags={parsedTags} variant="secondary" />
       </CardContent>
 
-      <Separator />
 
       <CardFooter className="flex justify-between pt-3">
         <Button

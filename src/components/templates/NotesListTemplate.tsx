@@ -36,7 +36,6 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
           onExportNotes={onExportNotes}
         />
 
-        <Separator />
       </Card>
     </div>
   )
