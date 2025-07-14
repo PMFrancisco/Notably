@@ -1,11 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ["class"],
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   prefix: "",
+  safelist: [
+    'theme-yellow',
+    'theme-pink', 
+    'theme-blue',
+    'theme-green',
+    'theme-orange',
+    'theme-purple'
+  ],
   theme: {
     container: {
       center: true,

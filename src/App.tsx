@@ -29,6 +29,8 @@ function App() {
     clearCurrentNote
   } = useNotes()
 
+  // Theme initialization is now handled by ThemeSelector component
+
   // Load existing note when URL is available
   useEffect(() => {
     const loadExistingNote = async () => {

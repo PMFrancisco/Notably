@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '../atoms'
+import { Button, ThemeSelector } from '../atoms'
 
 interface NoteHeaderProps {
   title: string
@@ -34,8 +34,16 @@ export const NoteHeader: React.FC<NoteHeaderProps> = ({
         </div>
       </div>
       {subtitle && (
-        <div className="text-sm text-muted-foreground mt-1">
-          {subtitle}
+        <div className="flex items-center justify-between mt-1">
+          <div className="text-sm text-muted-foreground">
+            {subtitle}
+          </div>
+          <ThemeSelector className="ml-auto" />
+        </div>
+      )}
+      {!subtitle && (
+        <div className="flex justify-end mt-1">
+          <ThemeSelector />
         </div>
       )}
     </div>
