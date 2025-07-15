@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardContent, CardFooter, Button, Separator } from '../atoms'
+import { Card, CardContent, CardFooter, Button } from '../atoms'
 import { FormField, TagDisplay } from '../molecules'
 import { useNoteForm } from '../../hooks'
 import { NoteFormData } from '../../types'
