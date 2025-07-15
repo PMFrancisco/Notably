@@ -38,7 +38,6 @@ export const NotesList: React.FC<NotesListProps> = ({
       <div className="px-6 pt-3">
         <Button 
           onClick={onExportNotes} 
-          variant="outline" 
           size="sm"
           className="w-full"
         >

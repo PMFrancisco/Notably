@@ -24,7 +24,6 @@ export const NoteHeader: React.FC<NoteHeaderProps> = ({
         <div className="flex items-center gap-2">
           {onBackClick && (
             <Button 
-              variant="ghost" 
               size="sm"
               onClick={onBackClick}
             >

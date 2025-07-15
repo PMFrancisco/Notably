@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardHeader } from '../atoms'
+import { Button, Card, CardHeader } from '../atoms'
 import { NoteHeader } from '../molecules'
 import { NoteForm } from '../organisms'
 import { getHostnameFromUrl, formatDate } from '../../utils'
@@ -30,12 +30,12 @@ export const NoteTemplate: React.FC<NoteTemplateProps> = ({
             title="Notably"
             subtitle={currentUrl ? getHostnameFromUrl(currentUrl) : 'No URL'}
             actionButton={
-              <button
+              <Button
+                size="sm"
                 onClick={onShowAllNotes}
-                className="text-sm text-blue-600 hover:text-blue-800"
               >
                 All Notes
-              </button>
+              </Button>
             }
           />
         </CardHeader>

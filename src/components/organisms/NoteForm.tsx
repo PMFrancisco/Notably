@@ -88,10 +88,10 @@ export const NoteForm: React.FC<NoteFormProps> = ({
         
         {showDeleteButton && onDelete && (
           <Button
-            variant="destructive"
             size="sm"
             onClick={handleDelete}
             disabled={isSaving}
+            className="text-destructive hover:text-destructive"
           >
             Delete
           </Button>

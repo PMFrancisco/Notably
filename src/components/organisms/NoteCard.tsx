@@ -23,7 +23,6 @@ export const NoteCard: React.FC<NoteCardProps> = ({
             {note.title || 'Untitled'}
           </h4>
           <Button
-            variant="ghost"
             size="sm"
             onClick={() => onDelete(note.url)}
             className="h-6 w-6 p-0 text-destructive hover:text-destructive"
