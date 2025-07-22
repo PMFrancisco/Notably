@@ -1,3 +1,19 @@
+# [0.3.0](https://github.com/PMFrancisco/Notably/compare/v0.2.0...v0.3.0) (2025-07-22)
+
+
+### Bug Fixes
+
+* manifest json update on firefox ([78edf4a](https://github.com/PMFrancisco/Notably/commit/78edf4a4f9727c9fd1e894caf691f94d7f4b87f2))
+* remove unnecesary files when building ([ba1b648](https://github.com/PMFrancisco/Notably/commit/ba1b648ca5ce969e3eb05c19e735ebfef4f3b6ad))
+
+
+### Features
+
+* change ThemeSelector to dropdown ([5a69bf6](https://github.com/PMFrancisco/Notably/commit/5a69bf688654473e85957db2d170ef3e1078bf6f))
+* delete textarea when you delete the note ([6697319](https://github.com/PMFrancisco/Notably/commit/6697319159881f4c5cdc722286a4d722bcc43b71))
+
+
+
 # [0.2.0](https://github.com/PMFrancisco/Notably/compare/v0.1.0...v0.2.0) (2025-07-14)
 
 
