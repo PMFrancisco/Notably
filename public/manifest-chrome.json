@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Notably",
-  "version": "0.0.0",
+  "version": "0.3.0",
   "description": "Browser extension for note taking on any website",
   "permissions": [
     "storage",

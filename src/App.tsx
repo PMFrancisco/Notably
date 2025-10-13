@@ -31,7 +31,7 @@ function App() {
       if (!currentUrl) return
       
       try {
-        const existingNote = await loadNoteForUrl(currentUrl)
+        await loadNoteForUrl(currentUrl)
       } catch (error) {
         console.error('Error loading existing note:', error)
       }

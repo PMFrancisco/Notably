@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test
+
+    - name: Run linting
+      run: npm run lint
+
+    - name: Build extensions
+      run: npm run build:cross-browser
+
+    - name: Create ZIP for Chrome
+      run: |
+        cd dist-chrome
+        zip -r ../notably-chrome.zip .
+        cd ..
+
+    - name: Create ZIP for Firefox
+      run: |
+        cd dist-firefox
+        zip -r ../notably-firefox.zip .
+        cd ..
+
+    - name: Conventional Changelog Action
+      id: changelog
+      uses: TriPSs/conventional-changelog-action@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        output-file: "CHANGELOG.md"
+        skip-version-file: false
+        skip-commit: false
+        git-message: 'chore(release): {version}'
+        preset: 'angular'
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      if: ${{ steps.changelog.outputs.skipped == 'false' }}
+      with:
+        tag_name: ${{ steps.changelog.outputs.tag }}
+        name: Release ${{ steps.changelog.outputs.tag }}
+        body: ${{ steps.changelog.outputs.clean_changelog }}
+        draft: false
+        prerelease: false
+        files: |
+          CHANGELOG.md
+          notably-chrome.zip
+          notably-firefox.zip
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Chrome Extension Artifact
+      uses: actions/upload-artifact@v4
+      if: ${{ steps.changelog.outputs.skipped == 'false' }}
+      with:
+        name: notably-chrome-${{ steps.changelog.outputs.version }}
+        path: notably-chrome.zip
+        retention-days: 90
+
+    - name: Upload Firefox Extension Artifact
+      uses: actions/upload-artifact@v4
+      if: ${{ steps.changelog.outputs.skipped == 'false' }}
+      with:
+        name: notably-firefox-${{ steps.changelog.outputs.version }}
+        path: notably-firefox.zip
+        retention-days: 90
+
