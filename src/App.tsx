@@ -9,10 +9,14 @@ import {
   importNotesFromJson,
   importNotes
 } from './utils'
-import { useNotes, useCurrentTab } from './hooks'
+import { useNotes, useCurrentTab, useToast } from './hooks'
 
 function App() {
   const [showAllNotes, setShowAllNotes] = useState(false)
+  const [isImporting, setIsImporting] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+  
+  const { showToast } = useToast()
 
   const { currentUrl, isLoading } = useCurrentTab()
   const { 
@@ -51,37 +55,60 @@ function App() {
 
   const handleSaveNote = async (data: { title: string; content: string; tags: string[] }) => {
     if (!currentUrl) return
-    await saveNote(currentUrl, data.title, data.content, data.tags)
+    try {
+      await saveNote(currentUrl, data.title, data.content, data.tags)
+      const isUpdate = !!savedNote
+      showToast(isUpdate ? 'Note updated!' : 'Note saved successfully!', 'success')
+    } catch (error) {
+      showToast('Failed to save note', 'error')
+    }
   }
 
   const handleDeleteNote = async () => {
     if (!currentUrl) return
-
-    await deleteNote(currentUrl)
+    try {
+      await deleteNote(currentUrl)
+      showToast('Note deleted', 'success')
+    } catch (error) {
+      showToast('Failed to delete note', 'error')
+    }
   }
 
   const handleDeleteNoteById = async (url: string) => {
-    await deleteNote(url)
-    await loadAllNotesData() // Refresh the list
+    try {
+      await deleteNote(url)
+      await loadAllNotesData() // Refresh the list
+      showToast('Note deleted', 'success')
+    } catch (error) {
+      showToast('Failed to delete note', 'error')
+    }
   }
 
   const handleExportNotes = async () => {
+    setIsExporting(true)
     try {
       await exportNotesToJson()
+      showToast('Notes exported successfully!', 'success')
     } catch (error) {
       console.error('Error exporting notes:', error)
+      showToast('Failed to export notes', 'error')
+    } finally {
+      setIsExporting(false)
     }
   }
 
   const handleImportNotes = async (file: File) => {
+    setIsImporting(true)
     try {
       const validatedNotes = await importNotesFromJson(file)
       const count = await importNotes(validatedNotes)
       await loadAllNotesData() // Refresh the list
-      console.log(`Successfully imported ${count} notes`)
+      showToast(`Imported ${count} note${count !== 1 ? 's' : ''} successfully!`, 'success')
     } catch (error) {
-      console.error('Error importing notes:', error)
-      throw error
+      const errorMessage = error instanceof Error ? error.message : 'Failed to import notes'
+      showToast(errorMessage, 'error')
+    } finally {
+      setIsImporting(false)
     }
   }
 
@@ -97,6 +124,8 @@ function App() {
         onDeleteNote={handleDeleteNoteById}
         onExportNotes={handleExportNotes}
         onImportNotes={handleImportNotes}
+        isImporting={isImporting}
+        isExporting={isExporting}
       />
     )
   }

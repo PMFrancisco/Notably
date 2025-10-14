@@ -11,6 +11,8 @@ interface NotesListTemplateProps {
   onDeleteNote: (url: string) => void
   onExportNotes: () => void
   onImportNotes: (file: File) => Promise<void>
+  isImporting: boolean
+  isExporting: boolean
 }
 
 export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
@@ -18,7 +20,9 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
   onBack,
   onDeleteNote,
   onExportNotes,
-  onImportNotes
+  onImportNotes,
+  isImporting,
+  isExporting
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   
@@ -58,6 +62,8 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
           onExportNotes={onExportNotes}
           onImportNotes={onImportNotes}
           isFiltering={!!searchQuery}
+          isImporting={isImporting}
+          isExporting={isExporting}
         />
       </Card>
     </div>

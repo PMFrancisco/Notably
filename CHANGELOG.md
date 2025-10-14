@@ -4,6 +4,8 @@
 ### Features
 
 * add import notes functionality ([pending](https://github.com/PMFrancisco/Notably/commit/pending))
+* add inline toast notifications for user feedback ([pending](https://github.com/PMFrancisco/Notably/commit/pending))
+* improve import/export button states - both disable when either is processing ([pending](https://github.com/PMFrancisco/Notably/commit/pending))
 
 
 # [0.3.0](https://github.com/PMFrancisco/Notably/compare/v0.2.0...v0.3.0) (2025-07-22)
