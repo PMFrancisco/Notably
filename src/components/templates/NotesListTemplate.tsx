@@ -10,13 +10,15 @@ interface NotesListTemplateProps {
   onBack: () => void
   onDeleteNote: (url: string) => void
   onExportNotes: () => void
+  onImportNotes: (file: File) => Promise<void>
 }
 
 export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
   notes,
   onBack,
   onDeleteNote,
-  onExportNotes
+  onExportNotes,
+  onImportNotes
 }) => {
   const [searchQuery, setSearchQuery] = useState('')
   
@@ -34,8 +36,8 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
 
   return (
     <div className="w-80 h-96 bg-background">
-      <Card className="h-full rounded-none border-none flex flex-col">
-        <CardHeader className="flex-shrink-0">
+      <Card className="h-full rounded-none border-none">
+        <CardHeader>
           <NoteHeader
             title="All Notes"
             subtitle={subtitle}
@@ -50,14 +52,13 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
           />
         </CardHeader>
 
-        <div className="flex-1 overflow-hidden flex flex-col">
-          <NotesList
-            notes={filteredNotes}
-            onDeleteNote={onDeleteNote}
-            onExportNotes={onExportNotes}
-            isFiltering={!!searchQuery}
-          />
-        </div>
+        <NotesList
+          notes={filteredNotes}
+          onDeleteNote={onDeleteNote}
+          onExportNotes={onExportNotes}
+          onImportNotes={onImportNotes}
+          isFiltering={!!searchQuery}
+        />
       </Card>
     </div>
   )

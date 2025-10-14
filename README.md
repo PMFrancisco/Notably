@@ -2,7 +2,7 @@
 
 > A modern, cross-browser note-taking extension that helps you capture ideas, thoughts, and information on any website.
 
-![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)
+![Version](https://img.shields.io/badge/version-0.4.0-blue.svg)
 ![License](https://img.shields.io/badge/license-ISC-green.svg)
 ![React](https://img.shields.io/badge/react-19.2.0-61dafb.svg)
 ![TypeScript](https://img.shields.io/badge/typescript-5.8.3-blue.svg)
@@ -18,6 +18,7 @@
 - 📚 **View All Notes** - Browse all your saved notes in one place
 - 🎨 **Theme Customization** - Choose from 6 beautiful color themes (Yellow, Pink, Blue, Green, Orange, Purple)
 - 📤 **Export Functionality** - Export all your notes to JSON format
+- 📥 **Import Functionality** - Import notes from previously exported JSON files
 - 🗑️ **Easy Management** - Delete notes you no longer need
 - ☁️ **Cloud Sync** - Automatic synchronization across devices using browser sync storage
 - 🌐 **Cross-Browser** - Works on both Chrome and Firefox
@@ -277,8 +278,16 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 ### Exporting Notes
 
 1. Go to "All Notes" view
-2. Click "Export All Notes"
+2. Click "Export All Notes" button
 3. A JSON file will be downloaded with all your notes
+
+### Importing Notes
+
+1. Go to "All Notes" view
+2. Click "Import Notes" button
+3. Select a previously exported JSON file
+4. Your notes will be imported and merged with existing notes
+5. Notes with the same URL will be overwritten with the imported version
 
 ### Changing Themes
 
@@ -307,9 +316,9 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 
 ## 🗺️ Roadmap
 
-### Version 0.4.0 (In Progress)
+### Version 0.4.0 (Current)
 - [x] Search and filter notes
-- [ ] Import notes from JSON
+- [x] Import notes from JSON
 - [ ] Keyboard shortcuts
 - [ ] Toast notifications
 - [ ] Note statistics

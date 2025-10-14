@@ -1,3 +1,11 @@
+# [0.4.0](https://github.com/PMFrancisco/Notably/compare/v0.3.0...v0.4.0) (2025-10-13)
+
+
+### Features
+
+* add import notes functionality ([pending](https://github.com/PMFrancisco/Notably/commit/pending))
+
+
 # [0.3.0](https://github.com/PMFrancisco/Notably/compare/v0.2.0...v0.3.0) (2025-07-22)
 
 

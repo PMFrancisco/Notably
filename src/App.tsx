@@ -5,7 +5,9 @@ import {
   LoadingTemplate
 } from './components'
 import { 
-  exportNotesToJson
+  exportNotesToJson,
+  importNotesFromJson,
+  importNotes
 } from './utils'
 import { useNotes, useCurrentTab } from './hooks'
 
@@ -71,6 +73,18 @@ function App() {
     }
   }
 
+  const handleImportNotes = async (file: File) => {
+    try {
+      const validatedNotes = await importNotesFromJson(file)
+      const count = await importNotes(validatedNotes)
+      await loadAllNotesData() // Refresh the list
+      console.log(`Successfully imported ${count} notes`)
+    } catch (error) {
+      console.error('Error importing notes:', error)
+      throw error
+    }
+  }
+
   if (isLoading) {
     return <LoadingTemplate />
   }
@@ -82,6 +96,7 @@ function App() {
         onBack={() => setShowAllNotes(false)}
         onDeleteNote={handleDeleteNoteById}
         onExportNotes={handleExportNotes}
+        onImportNotes={handleImportNotes}
       />
     )
   }

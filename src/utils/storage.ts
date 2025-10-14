@@ -39,6 +39,19 @@ export const deleteNote = async (url: string): Promise<void> => {
   }
 }
 
+export const importNotes = async (notes: Record<string, Note>): Promise<number> => {
+  try {
+    // Batch import all notes
+    await browser.storage.sync.set(notes)
+    
+    // Return count of imported notes
+    return Object.keys(notes).length
+  } catch (error) {
+    console.error('Error importing notes:', error)
+    throw error
+  }
+}
+
 export const createNoteData = (
   title: string,
   content: string,
