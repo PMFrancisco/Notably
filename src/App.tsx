@@ -59,7 +59,7 @@ function App() {
       await saveNote(currentUrl, data.title, data.content, data.tags)
       const isUpdate = !!savedNote
       showToast(isUpdate ? 'Note updated!' : 'Note saved successfully!', 'success')
-    } catch (error) {
+    } catch {
       showToast('Failed to save note', 'error')
     }
   }
@@ -69,7 +69,7 @@ function App() {
     try {
       await deleteNote(currentUrl)
       showToast('Note deleted', 'success')
-    } catch (error) {
+    } catch {
       showToast('Failed to delete note', 'error')
     }
   }
@@ -79,7 +79,7 @@ function App() {
       await deleteNote(url)
       await loadAllNotesData() // Refresh the list
       showToast('Note deleted', 'success')
-    } catch (error) {
+    } catch {
       showToast('Failed to delete note', 'error')
     }
   }

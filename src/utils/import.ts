@@ -6,15 +6,15 @@ export interface ImportValidationResult {
   error?: string
 }
 
-const isValidNote = (note: any): note is Note => {
+const isValidNote = (note: unknown): note is Note => {
   return (
     typeof note === 'object' &&
     note !== null &&
-    typeof note.title === 'string' &&
-    typeof note.content === 'string' &&
-    typeof note.url === 'string' &&
-    typeof note.timestamp === 'number' &&
-    (note.tags === undefined || Array.isArray(note.tags))
+    typeof (note as Note).title === 'string' &&
+    typeof (note as Note).content === 'string' &&
+    typeof (note as Note).url === 'string' &&
+    typeof (note as Note).timestamp === 'number' &&
+    ((note as Note).tags === undefined || Array.isArray((note as Note).tags))
   )
 }
 
@@ -24,10 +24,10 @@ export const importNotesFromJson = async (file: File): Promise<Record<string, No
     const text = await file.text()
     
     // Parse JSON
-    let data: any
+    let data: unknown
     try {
       data = JSON.parse(text)
-    } catch (error) {
+    } catch {
       throw new Error('Invalid JSON file. Please select a valid Notably export file.')
     }
 

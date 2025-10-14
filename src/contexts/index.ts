@@ -1,2 +1,3 @@
-export * from './ToastContext'
+export * from './toast-context'
+export * from './ToastProvider'
 

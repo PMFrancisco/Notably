@@ -320,7 +320,7 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 - [x] Search and filter notes
 - [x] Import notes from JSON
 - [ ] Keyboard shortcuts
-- [ ] Toast notifications
+- [X] Toast notifications
 - [ ] Note statistics
 
 ### Version 0.5.0 (Future)

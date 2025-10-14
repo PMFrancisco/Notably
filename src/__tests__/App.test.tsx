@@ -2,9 +2,19 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import browser from 'webextension-polyfill';
+import { ToastProvider } from '../contexts';
 
 // Mock webextension-polyfill
 jest.mock('webextension-polyfill');
+
+// Helper function to render App with ToastProvider
+const renderApp = () => {
+  return render(
+    <ToastProvider>
+      <App />
+    </ToastProvider>
+  );
+};
 
 describe('Notably App', () => {
   beforeEach(() => {
@@ -13,7 +23,7 @@ describe('Notably App', () => {
   });
 
   it('renders the Notably popup without crashing', async () => {
-    render(<App />);
+    renderApp();
     
     // Wait for the component to load and check for main elements
     await waitFor(() => {
@@ -23,12 +33,12 @@ describe('Notably App', () => {
   });
 
   it('shows loading state initially', () => {
-    render(<App />);
+    renderApp();
     expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 
   it('displays the current URL hostname after loading', async () => {
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       // The app displays the hostname, not the full URL
@@ -37,7 +47,7 @@ describe('Notably App', () => {
   });
 
   it('has input fields for title, note, and tags', async () => {
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByPlaceholderText('Note title (optional)')).toBeInTheDocument();
@@ -47,7 +57,7 @@ describe('Notably App', () => {
   });
 
   it('has a save button that is initially disabled', async () => {
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       const saveButton = screen.getByText('Save Note');
@@ -58,7 +68,7 @@ describe('Notably App', () => {
 
   it('enables save button when user types in note field', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByPlaceholderText('Write your note here...')).toBeInTheDocument();
@@ -73,7 +83,7 @@ describe('Notably App', () => {
 
   it('enables save button when user types in title field', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByPlaceholderText('Note title (optional)')).toBeInTheDocument();
@@ -88,7 +98,7 @@ describe('Notably App', () => {
 
   it('displays tag badges when tags are entered', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByPlaceholderText('tag1, tag2, tag3...')).toBeInTheDocument();
@@ -106,7 +116,7 @@ describe('Notably App', () => {
 
   it('navigates to All Notes view when button is clicked', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByText('All Notes')).toBeInTheDocument();
@@ -118,13 +128,13 @@ describe('Notably App', () => {
     await waitFor(() => {
       expect(screen.getByText('← Back')).toBeInTheDocument();
       expect(screen.getByText('No notes saved yet')).toBeInTheDocument();
-      expect(screen.getByText('Export All Notes')).toBeInTheDocument();
+      expect(screen.getByText('Export')).toBeInTheDocument();
     });
   });
 
   it('navigates back from All Notes view to main view', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByText('All Notes')).toBeInTheDocument();
@@ -150,7 +160,7 @@ describe('Notably App', () => {
   });
 
   it('shows appropriate labels for all form fields', async () => {
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByText('Title')).toBeInTheDocument();
@@ -163,7 +173,7 @@ describe('Notably App', () => {
     const user = userEvent.setup();
     const mockStorage = browser.storage.sync as jest.Mocked<typeof browser.storage.sync>;
     
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByPlaceholderText('Note title (optional)')).toBeInTheDocument();
@@ -208,7 +218,7 @@ describe('Notably App', () => {
     // Mock storage to return existing note
     mockStorage.get.mockResolvedValueOnce({ 'https://example.com': existingNote });
 
-    render(<App />);
+    renderApp();
 
     await waitFor(() => {
       expect(screen.getByDisplayValue('Existing Note')).toBeInTheDocument();
@@ -222,7 +232,7 @@ describe('Notably App', () => {
 
   it('keeps save button disabled when only tags are entered', async () => {
     const user = userEvent.setup();
-    render(<App />);
+    renderApp();
     
     await waitFor(() => {
       expect(screen.getByPlaceholderText('tag1, tag2, tag3...')).toBeInTheDocument();
