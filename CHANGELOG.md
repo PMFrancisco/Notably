@@ -1,3 +1,12 @@
+## [0.4.1](https://github.com/PMFrancisco/Notably/compare/v0.4.0...v0.4.1) (2025-11-03)
+
+
+### Bug Fixes
+
+* add zip to gitignore ([16ea85c](https://github.com/PMFrancisco/Notably/commit/16ea85cdd320ebec9351f5b07e6f3ef54a48b95b))
+
+
+
 # [0.4.0](https://github.com/PMFrancisco/Notably/compare/v0.3.0...v0.4.0) (2025-11-03)
 
 
