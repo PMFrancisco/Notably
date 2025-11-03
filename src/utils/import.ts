@@ -45,6 +45,11 @@ export const importNotesFromJson = async (file: File): Promise<Record<string, No
     }
 
     for (const [url, note] of entries) {
+      // Skip the notably_trash key (for backward compatibility with old exports)
+      if (url === 'notably_trash') {
+        continue
+      }
+      
       if (!isValidNote(note)) {
         throw new Error(`Invalid note format for URL: ${url}. Missing required fields.`)
       }

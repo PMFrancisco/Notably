@@ -28,7 +28,9 @@ export const loadNote = async (url: string): Promise<Note | null> => {
 export const loadAllNotes = async (): Promise<{ [key: string]: Note }> => {
   try {
     const result = await browser.storage.sync.get(null)
-    return result as { [key: string]: Note }
+    // Filter out the trash key - it's not a note
+    const { [TRASH_KEY]: _, ...notes } = result
+    return notes as { [key: string]: Note }
   } catch (error) {
     console.error('Error loading all notes:', error)
     throw error

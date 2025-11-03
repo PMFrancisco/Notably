@@ -2,6 +2,7 @@ import { loadAllNotes } from './storage'
 
 export const exportNotesToJson = async (): Promise<void> => {
   try {
+    // loadAllNotes already filters out notably_trash, but we keep this comment for clarity
     const allNotes = await loadAllNotes()
     const dataStr = JSON.stringify(allNotes, null, 2)
     const dataBlob = new Blob([dataStr], { type: 'application/json' })
