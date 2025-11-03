@@ -13,6 +13,8 @@ interface NotesListTemplateProps {
   onOpenPage: (url: string) => void
   onExportNotes: () => void
   onImportNotes: (file: File) => Promise<void>
+  onViewTrash: () => void
+  trashCount: number
   isImporting: boolean
   isExporting: boolean
 }
@@ -25,6 +27,8 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
   onOpenPage,
   onExportNotes,
   onImportNotes,
+  onViewTrash,
+  trashCount,
   isImporting,
   isExporting
 }) => {
@@ -63,6 +67,21 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
                 </div>
               </div>
             </div>
+            
+            <Button
+              variant="icon"
+              size="icon"
+              onClick={onViewTrash}
+              title={`Trash (${trashCount} items)`}
+              className="relative"
+            >
+              🗑️
+              {trashCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-semibold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+                  {trashCount}
+                </span>
+              )}
+            </Button>
           </div>
           
           <SearchBar

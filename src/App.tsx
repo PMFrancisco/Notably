@@ -3,7 +3,8 @@ import browser from 'webextension-polyfill'
 import { 
   NoteTemplate,
   NotesListTemplate,
-  LoadingTemplate
+  LoadingTemplate,
+  TrashView
 } from './components'
 import { 
   exportNotesToJson,
@@ -14,6 +15,7 @@ import { useNotes, useCurrentTab, useToast } from './hooks'
 
 function App() {
   const [showAllNotes, setShowAllNotes] = useState(false)
+  const [showTrash, setShowTrash] = useState(false)
   const [isImporting, setIsImporting] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   
@@ -28,7 +30,14 @@ function App() {
     loadNoteForUrl, 
     loadAllNotesData, 
     deleteNote,
-    toggleStar
+    toggleStar,
+    trash,
+    trashCount,
+    loadTrashData,
+    moveToTrash,
+    restoreFromTrash,
+    permanentlyDelete,
+    emptyTrash
   } = useNotes()
 
   // Theme initialization is now handled by ThemeSelector component
@@ -55,6 +64,13 @@ function App() {
     }
   }, [showAllNotes, loadAllNotesData])
 
+  // Load trash when viewing trash
+  useEffect(() => {
+    if (showTrash) {
+      loadTrashData()
+    }
+  }, [showTrash, loadTrashData])
+
   const handleSaveNote = async (data: { title: string; content: string; tags: string[] }) => {
     if (!currentUrl) return
     try {
@@ -69,20 +85,47 @@ function App() {
   const handleDeleteNote = async () => {
     if (!currentUrl) return
     try {
-      await deleteNote(currentUrl)
-      showToast('Note deleted', 'success')
+      await moveToTrash(currentUrl)
+      showToast('Note moved to trash', 'success')
     } catch {
-      showToast('Failed to delete note', 'error')
+      showToast('Failed to move note to trash', 'error')
     }
   }
 
   const handleDeleteNoteById = async (url: string) => {
     try {
-      await deleteNote(url)
+      await moveToTrash(url)
       await loadAllNotesData() // Refresh the list
-      showToast('Note deleted', 'success')
+      showToast('Note moved to trash', 'success')
+    } catch {
+      showToast('Failed to move note to trash', 'error')
+    }
+  }
+
+  const handleRestoreNote = async (url: string) => {
+    try {
+      await restoreFromTrash(url)
+      showToast('Note restored successfully!', 'success')
+    } catch {
+      showToast('Failed to restore note', 'error')
+    }
+  }
+
+  const handlePermanentDelete = async (url: string) => {
+    try {
+      await permanentlyDelete(url)
+      showToast('Note permanently deleted', 'success')
     } catch {
       showToast('Failed to delete note', 'error')
+    }
+  }
+
+  const handleEmptyTrash = async () => {
+    try {
+      await emptyTrash()
+      showToast('Trash emptied successfully!', 'success')
+    } catch {
+      showToast('Failed to empty trash', 'error')
     }
   }
 
@@ -127,6 +170,18 @@ function App() {
     return <LoadingTemplate />
   }
 
+  if (showTrash) {
+    return (
+      <TrashView
+        trash={trash}
+        onRestore={handleRestoreNote}
+        onPermanentDelete={handlePermanentDelete}
+        onEmptyTrash={handleEmptyTrash}
+        onBack={() => setShowTrash(false)}
+      />
+    )
+  }
+
   if (showAllNotes) {
     return (
       <NotesListTemplate
@@ -137,6 +192,8 @@ function App() {
         onOpenPage={handleOpenPage}
         onExportNotes={handleExportNotes}
         onImportNotes={handleImportNotes}
+        onViewTrash={() => setShowTrash(true)}
+        trashCount={trashCount}
         isImporting={isImporting}
         isExporting={isExporting}
       />

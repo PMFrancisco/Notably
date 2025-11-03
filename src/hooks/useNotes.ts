@@ -1,16 +1,25 @@
 import { useState, useCallback } from 'react'
-import { Note } from '../types'
+import { Note, TrashedNote } from '../types'
 import { 
   saveNote as saveNoteToStorage, 
   loadNote, 
   loadAllNotes, 
   deleteNote as deleteNoteFromStorage, 
-  createNoteData 
+  createNoteData,
+  moveNoteToTrash as moveToTrashStorage,
+  restoreNoteFromTrash as restoreFromTrashStorage,
+  permanentlyDeleteNote as permanentDeleteStorage,
+  emptyTrash as emptyTrashStorage,
+  loadTrash,
+  cleanupTrash as cleanupTrashStorage,
+  getTrashCount
 } from '../utils'
 
 export const useNotes = () => {
   const [savedNote, setSavedNote] = useState<Note | null>(null)
   const [allNotes, setAllNotes] = useState<{ [key: string]: Note }>({})
+  const [trash, setTrash] = useState<{ [key: string]: TrashedNote }>({})
+  const [trashCount, setTrashCount] = useState<number>(0)
   const [isSaving, setIsSaving] = useState(false)
 
   const saveNote = useCallback(async (
@@ -115,6 +124,101 @@ export const useNotes = () => {
     }
   }, [savedNote])
 
+  // Trash operations
+  const loadTrashData = useCallback(async () => {
+    try {
+      await cleanupTrashStorage()
+      const trashData = await loadTrash()
+      setTrash(trashData)
+      const count = await getTrashCount()
+      setTrashCount(count)
+      return trashData
+    } catch (error) {
+      console.error('Error loading trash:', error)
+      throw error
+    }
+  }, [])
+
+  const moveToTrash = useCallback(async (url: string) => {
+    try {
+      const note = await loadNote(url)
+      if (!note) return
+
+      await moveToTrashStorage(url, note)
+      
+      // Update local state
+      setSavedNote(null)
+      setAllNotes(prevNotes => {
+        const newNotes = { ...prevNotes }
+        delete newNotes[url]
+        return newNotes
+      })
+      
+      // Reload trash to update UI
+      await loadTrashData()
+    } catch (error) {
+      console.error('Error moving to trash:', error)
+      throw error
+    }
+  }, [loadTrashData])
+
+  const restoreFromTrash = useCallback(async (url: string) => {
+    try {
+      const restoredNote = await restoreFromTrashStorage(url)
+      if (!restoredNote) return
+
+      // Update local state
+      setAllNotes(prevNotes => ({
+        ...prevNotes,
+        [url]: restoredNote
+      }))
+      
+      setTrash(prevTrash => {
+        const newTrash = { ...prevTrash }
+        delete newTrash[url]
+        return newTrash
+      })
+      
+      // Update trash count
+      const count = await getTrashCount()
+      setTrashCount(count)
+    } catch (error) {
+      console.error('Error restoring from trash:', error)
+      throw error
+    }
+  }, [])
+
+  const permanentlyDelete = useCallback(async (url: string) => {
+    try {
+      await permanentDeleteStorage(url)
+      
+      // Update local state
+      setTrash(prevTrash => {
+        const newTrash = { ...prevTrash }
+        delete newTrash[url]
+        return newTrash
+      })
+      
+      // Update trash count
+      const count = await getTrashCount()
+      setTrashCount(count)
+    } catch (error) {
+      console.error('Error permanently deleting:', error)
+      throw error
+    }
+  }, [])
+
+  const emptyTrash = useCallback(async () => {
+    try {
+      await emptyTrashStorage()
+      setTrash({})
+      setTrashCount(0)
+    } catch (error) {
+      console.error('Error emptying trash:', error)
+      throw error
+    }
+  }, [])
+
   return {
     savedNote,
     allNotes,
@@ -124,6 +228,14 @@ export const useNotes = () => {
     loadAllNotesData,
     deleteNote,
     clearCurrentNote,
-    toggleStar
+    toggleStar,
+    // Trash operations
+    trash,
+    trashCount,
+    loadTrashData,
+    moveToTrash,
+    restoreFromTrash,
+    permanentlyDelete,
+    emptyTrash
   }
 } 

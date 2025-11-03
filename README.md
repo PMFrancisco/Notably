@@ -2,7 +2,7 @@
 
 > A modern, cross-browser note-taking extension that helps you capture ideas, thoughts, and information on any website.
 
-![Version](https://img.shields.io/badge/version-0.4.0-blue.svg)
+![Version](https://img.shields.io/badge/version-0.4.1-blue.svg)
 ![License](https://img.shields.io/badge/license-ISC-green.svg)
 ![React](https://img.shields.io/badge/react-19.2.0-61dafb.svg)
 ![TypeScript](https://img.shields.io/badge/typescript-5.8.3-blue.svg)
@@ -19,7 +19,7 @@
 - 🎨 **Theme Customization** - Choose from 6 beautiful color themes (Yellow, Pink, Blue, Green, Orange, Purple)
 - 📤 **Export Functionality** - Export all your notes to JSON format
 - 📥 **Import Functionality** - Import notes from previously exported JSON files
-- 🗑️ **Easy Management** - Delete notes you no longer need
+- 🗑️ **Trash with Restore** - Deleted notes go to trash and can be restored (30-day retention, 50-note limit)
 - ☁️ **Cloud Sync** - Automatic synchronization across devices using browser sync storage
 - 🌐 **Cross-Browser** - Works on both Chrome and Firefox
 - ⌨️ **Keyboard Shortcuts** - Quick save and delete with keyboard commands
@@ -186,9 +186,9 @@ Notably/
 ### Architecture
 
 The project follows the **Atomic Design** pattern:
-- **Atoms**: Basic building blocks (Button, Input, Badge, etc.)
-- **Molecules**: Simple combinations (FormField, NoteHeader, etc.)
-- **Organisms**: Complex components (NoteForm, NotesList, etc.)
+- **Atoms**: Basic building blocks (Button, Input, Badge, Textarea, etc.)
+- **Molecules**: Simple combinations (FormField, TagInput, SearchBar, ThemeSelector, etc.)
+- **Organisms**: Complex components (NoteForm, NotesList, NoteCard, DomainGroup, etc.)
 - **Templates**: Page layouts (NoteTemplate, NotesListTemplate, etc.)
 
 ---
@@ -300,6 +300,20 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 4. Starred notes also remain visible in their domain groups with the ⭐ icon
 5. Click the ⭐ icon again to unstar a note
 
+### Using Trash
+
+When you delete a note, it's not permanently removed - it goes to trash where you can recover it:
+
+1. **Deleting a Note**: Click the delete button (🗑️) on any note to move it to trash
+2. **Accessing Trash**: In "All Notes" view, click the 🗑️ icon in the header (shows count of trashed items)
+3. **Restoring Notes**: In trash view, hover over a note and click the ↺ restore button
+4. **Permanent Deletion**: Hover over a note and click the × button to permanently delete it
+5. **Empty Trash**: Click "Empty Trash" button to permanently delete all trashed notes at once
+6. **Auto-Cleanup**: Notes are automatically removed from trash after **30 days**
+7. **Storage Limit**: Trash keeps your last **50 deleted notes** maximum
+
+> **Note**: Starred status is preserved when notes are moved to trash and restored!
+
 ### Exporting Notes
 
 1. Go to "All Notes" view
@@ -350,7 +364,7 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 ### Version 0.5.0 (Current)
 - [x] Folders/categories (organized by domain)
 - [x] Favorites/starred notes
-- [ ] Trash with restore functionality
+- [x] Trash with restore functionality
 
 ### Version 0.6.0+ (Future)
 - [ ] Smart tagging with autocomplete
