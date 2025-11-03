@@ -11,7 +11,7 @@ export const LoadingTemplate: React.FC<LoadingTemplateProps> = ({
   return (
     <Loading 
       message={message}
-      className="w-80 h-96 bg-background"
+      className="w-80 flex-1 flex flex-col bg-background"
     />
   )
 } 

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Card, CardContent, CardFooter, Button } from '../atoms'
-import { FormField, TagDisplay } from '../molecules'
+import { Card, CardContent, CardFooter, Button, Input, Textarea } from '../atoms'
+import { TagInput } from '../molecules'
 import { useNoteForm, useKeyboardShortcuts } from '../../hooks'
 import { NoteFormData } from '../../types'
 
@@ -46,66 +46,58 @@ export const NoteForm: React.FC<NoteFormProps> = ({
   })
 
   return (
-    <Card className="h-full rounded-none border-none">
-      <CardContent className="space-y-4">
-        <FormField
+    <div className="flex flex-col flex-1 min-h-0">
+      <CardContent className="flex-1 flex flex-col space-y-3 pb-0 overflow-y-auto">
+        <Input
           id="title"
-          label="Title"
           type="text"
-          placeholder="Note title (optional)"
+          placeholder="Title (optional)"
           value={title}
-          onChange={setTitle}
+          onChange={(e) => setTitle(e.target.value)}
           disabled={isSaving}
+          className="h-9"
         />
 
-        <FormField
+        <Textarea
           id="content"
-          label="Content"
-          type="textarea"
           placeholder="Write your note here..."
           value={content}
-          onChange={setContent}
+          onChange={(e) => setContent(e.target.value)}
           disabled={isSaving}
-          rows={4}
+          className="flex-1 min-h-[120px] resize-none"
         />
 
-        <FormField
-          id="tags"
-          label="Tags (comma separated)"
-          type="text"
-          placeholder="tag1, tag2, tag3..."
-          value={tags}
-          onChange={setTags}
+        <TagInput
+          tags={parsedTags}
+          onTagsChange={(newTags) => setTags(newTags.join(', '))}
           disabled={isSaving}
         />
-
-        <TagDisplay tags={parsedTags} variant="secondary" />
       </CardContent>
 
-
-      <CardFooter className="flex justify-between pt-3">
+      <CardFooter className="flex gap-2 pt-4 pb-3 flex-shrink-0">
         <Button
+          variant="default"
+          size="sm"
           onClick={handleSave}
           disabled={isSaving || !isFormValid}
-          size="sm"
-          className="flex-1 mr-2"
+          fullWidth
           title="Save note (Ctrl+Enter)"
         >
-          {isSaving ? 'Saving...' : saveButtonText}
+          {isSaving ? '💾 Saving...' : `💾 ${saveButtonText}`}
         </Button>
         
         {showDeleteButton && onDelete && (
           <Button
-            size="sm"
+            variant="destructive"
+            size="icon"
             onClick={handleDelete}
             disabled={isSaving}
-            className="text-destructive hover:text-destructive"
             title="Delete note (Ctrl+Shift+Backspace)"
           >
-            Delete
+            🗑️
           </Button>
         )}
       </CardFooter>
-    </Card>
+    </div>
   )
 } 

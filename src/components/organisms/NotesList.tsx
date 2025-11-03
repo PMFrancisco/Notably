@@ -2,13 +2,15 @@ import React, { useRef } from 'react'
 import { CardContent, Button } from '../atoms'
 import { NoteCard } from './NoteCard'
 import { EmptyState } from '../atoms'
-import { DomainGroup } from '../molecules'
+import { DomainGroup } from './DomainGroup'
 import { Note } from '../../types'
 import { groupNotesByDomain } from '../../utils'
 
 interface NotesListProps {
   notes: Record<string, Note>
   onDeleteNote: (url: string) => void
+  onToggleStar: (url: string) => void
+  onOpenPage: (url: string) => void
   onExportNotes: () => void
   onImportNotes: (file: File) => Promise<void>
   isFiltering?: boolean
@@ -20,6 +22,8 @@ interface NotesListProps {
 export const NotesList: React.FC<NotesListProps> = ({
   notes,
   onDeleteNote,
+  onToggleStar,
+  onOpenPage,
   onExportNotes,
   onImportNotes,
   isFiltering = false,
@@ -30,6 +34,11 @@ export const NotesList: React.FC<NotesListProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null)
   
   const noteEntries = Object.entries(notes).filter(([, note]) => note.title || note.content)
+  
+  // Extract starred notes
+  const starredNotes = noteEntries
+    .filter(([, note]) => note.starred)
+    .map(([url, note]) => ({ ...note, url } as Note))
   
   // Group notes by domain
   const groupedNotes = groupNotesByDomain(notes)
@@ -57,7 +66,7 @@ export const NotesList: React.FC<NotesListProps> = ({
 
   return (
     <>
-      <CardContent className={`h-72 overflow-y-auto ${className}`}>
+      <CardContent className={`flex-1 overflow-y-auto min-h-0 ${className}`}>
         {noteEntries.length === 0 ? (
           <div className="py-3">
             <EmptyState message={emptyMessage} />
@@ -70,25 +79,39 @@ export const NotesList: React.FC<NotesListProps> = ({
                 key={url}
                 note={{ ...note, url }}
                 onDelete={onDeleteNote}
+                onToggleStar={onToggleStar}
+                onOpenPage={onOpenPage}
               />
             ))}
           </div>
         ) : (
-          // When not searching, show grouped by domain
+          // When not searching, show grouped by domain with starred section at top
           <div className="space-y-0">
+            {starredNotes.length > 0 && (
+              <DomainGroup
+                key="starred"
+                domain="⭐ Starred"
+                notes={starredNotes}
+                onDeleteNote={onDeleteNote}
+                onToggleStar={onToggleStar}
+                onOpenPage={onOpenPage}
+              />
+            )}
             {groupedNotes.map(([domain, domainNotes]) => (
               <DomainGroup
                 key={domain}
                 domain={domain}
                 notes={domainNotes as Note[]}
                 onDeleteNote={onDeleteNote}
+                onToggleStar={onToggleStar}
+                onOpenPage={onOpenPage}
               />
             ))}
           </div>
         )}
       </CardContent>
       
-      <div className="px-6 pb-6">
+      <div className="px-6 pt-4 pb-3 flex-shrink-0">
         <input
           ref={fileInputRef}
           type="file"

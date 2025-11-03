@@ -1,17 +1,21 @@
 import React, { useState } from 'react'
-import { NoteCard } from '../organisms'
+import { NoteCard } from './NoteCard'
 import { Note } from '../../types'
 
 interface DomainGroupProps {
   domain: string
   notes: Note[]
   onDeleteNote: (url: string) => void
+  onToggleStar?: (url: string) => void
+  onOpenPage?: (url: string) => void
 }
 
 export const DomainGroup: React.FC<DomainGroupProps> = ({
   domain,
   notes,
-  onDeleteNote
+  onDeleteNote,
+  onToggleStar,
+  onOpenPage
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -39,6 +43,8 @@ export const DomainGroup: React.FC<DomainGroupProps> = ({
               key={note.url}
               note={note}
               onDelete={onDeleteNote}
+              onToggleStar={onToggleStar}
+              onOpenPage={onOpenPage}
             />
           ))}
         </div>

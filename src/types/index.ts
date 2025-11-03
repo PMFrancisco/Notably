@@ -4,6 +4,7 @@ export interface Note {
   url: string;
   timestamp: number;
   tags?: string[];
+  starred?: boolean;
 }
 
 export interface NoteFormData {

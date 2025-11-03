@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import browser from 'webextension-polyfill'
 import { 
   NoteTemplate,
   NotesListTemplate,
@@ -26,7 +27,8 @@ function App() {
     saveNote, 
     loadNoteForUrl, 
     loadAllNotesData, 
-    deleteNote
+    deleteNote,
+    toggleStar
   } = useNotes()
 
   // Theme initialization is now handled by ThemeSelector component
@@ -84,6 +86,15 @@ function App() {
     }
   }
 
+  const handleOpenPage = async (url: string) => {
+    try {
+      await browser.tabs.create({ url })
+    } catch (error) {
+      console.error('Error opening page:', error)
+      showToast('Failed to open page', 'error')
+    }
+  }
+
   const handleExportNotes = async () => {
     setIsExporting(true)
     try {
@@ -122,12 +133,23 @@ function App() {
         notes={allNotes}
         onBack={() => setShowAllNotes(false)}
         onDeleteNote={handleDeleteNoteById}
+        onToggleStar={toggleStar}
+        onOpenPage={handleOpenPage}
         onExportNotes={handleExportNotes}
         onImportNotes={handleImportNotes}
         isImporting={isImporting}
         isExporting={isExporting}
       />
     )
+  }
+
+  const handleToggleStar = async () => {
+    if (!currentUrl) return
+    try {
+      await toggleStar(currentUrl)
+    } catch {
+      showToast('Failed to update star', 'error')
+    }
   }
 
   return (
@@ -137,6 +159,7 @@ function App() {
       onSave={handleSaveNote}
       onDelete={handleDeleteNote}
       onShowAllNotes={() => setShowAllNotes(true)}
+      onToggleStar={savedNote ? handleToggleStar : undefined}
       isSaving={isSaving}
     />
   )

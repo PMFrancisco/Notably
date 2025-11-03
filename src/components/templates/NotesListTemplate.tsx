@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Card, CardHeader } from '../atoms'
-import { NoteHeader, SearchBar } from '../molecules'
+import { Card, CardHeader, Button } from '../atoms'
+import { SearchBar } from '../molecules'
 import { NotesList } from '../organisms'
 import { Note } from '../../types'
 import { useSearch } from '../../hooks'
@@ -9,6 +9,8 @@ interface NotesListTemplateProps {
   notes: Record<string, Note>
   onBack: () => void
   onDeleteNote: (url: string) => void
+  onToggleStar: (url: string) => void
+  onOpenPage: (url: string) => void
   onExportNotes: () => void
   onImportNotes: (file: File) => Promise<void>
   isImporting: boolean
@@ -19,6 +21,8 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
   notes,
   onBack,
   onDeleteNote,
+  onToggleStar,
+  onOpenPage,
   onExportNotes,
   onImportNotes,
   isImporting,
@@ -39,26 +43,40 @@ export const NotesListTemplate: React.FC<NotesListTemplateProps> = ({
     : `${totalNotes} saved note${totalNotes !== 1 ? 's' : ''}`
 
   return (
-    <div className="w-80 h-96 bg-background">
-      <Card className="h-full rounded-none border-none">
-        <CardHeader>
-          <NoteHeader
-            title="All Notes"
-            subtitle={subtitle}
-            onBackClick={onBack}
-          />
+    <div className="w-80 flex-1 flex flex-col bg-background">
+      <Card className="flex-1 rounded-none border-none flex flex-col">
+        <CardHeader className="pb-3 flex-shrink-0">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <Button
+                variant="icon"
+                size="icon"
+                onClick={onBack}
+                title="Back"
+              >
+                ←
+              </Button>
+              <div className="min-w-0">
+                <h1 className="text-lg font-semibold leading-tight">All Notes</h1>
+                <div className="text-xs text-muted-foreground truncate">
+                  {subtitle}
+                </div>
+              </div>
+            </div>
+          </div>
           
           <SearchBar
             value={searchQuery}
             onChange={setSearchQuery}
             placeholder="Search notes..."
-            className="mt-3"
           />
         </CardHeader>
 
         <NotesList
           notes={filteredNotes}
           onDeleteNote={onDeleteNote}
+          onToggleStar={onToggleStar}
+          onOpenPage={onOpenPage}
           onExportNotes={onExportNotes}
           onImportNotes={onImportNotes}
           isFiltering={!!searchQuery}

@@ -24,6 +24,7 @@
 - 🌐 **Cross-Browser** - Works on both Chrome and Firefox
 - ⌨️ **Keyboard Shortcuts** - Quick save and delete with keyboard commands
 - 📁 **Smart Organization** - Notes automatically grouped by website domain
+- ⭐ **Starred Notes** - Mark important notes as favorites for quick access
 
 ---
 
@@ -286,9 +287,18 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 1. Open the extension popup
 2. Click "All Notes" button
 3. Browse all your saved notes, **automatically grouped by website domain**
-4. Click on any domain name to expand/collapse notes from that site
-5. Use the search bar to filter notes (switches to flat list view when searching)
-6. Click the delete button to remove notes
+4. **Starred notes appear in a special section at the top** for quick access
+5. Click on any domain name to expand/collapse notes from that site
+6. Use the search bar to filter notes (switches to flat list view when searching)
+7. Click the delete button to remove notes
+
+### Starring Notes
+
+1. Go to "All Notes" view
+2. Click the ☆ icon on any note to star it (it becomes ⭐)
+3. Starred notes appear in the "⭐ Starred" section at the top
+4. Starred notes also remain visible in their domain groups with the ⭐ icon
+5. Click the ⭐ icon again to unstar a note
 
 ### Exporting Notes
 
@@ -339,8 +349,7 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 
 ### Version 0.5.0 (Current)
 - [x] Folders/categories (organized by domain)
-- [ ] Markdown support
-- [ ] Favorites/starred notes
+- [x] Favorites/starred notes
 - [ ] Trash with restore functionality
 
 ### Version 0.6.0+ (Future)
