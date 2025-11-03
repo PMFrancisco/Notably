@@ -29,6 +29,7 @@ export const loadAllNotes = async (): Promise<{ [key: string]: Note }> => {
   try {
     const result = await browser.storage.sync.get(null)
     // Filter out the trash key - it's not a note
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [TRASH_KEY]: _, ...notes } = result
     return notes as { [key: string]: Note }
   } catch (error) {
