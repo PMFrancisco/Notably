@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, CardContent, CardFooter, Button } from '../atoms'
 import { FormField, TagDisplay } from '../molecules'
-import { useNoteForm } from '../../hooks'
+import { useNoteForm, useKeyboardShortcuts } from '../../hooks'
 import { NoteFormData } from '../../types'
 
 interface NoteFormProps {
@@ -36,6 +36,13 @@ export const NoteForm: React.FC<NoteFormProps> = ({
     initialData,
     onSave,
     onDelete
+  })
+
+  // Add keyboard shortcuts
+  useKeyboardShortcuts({
+    onSave: isFormValid && !isSaving ? handleSave : undefined,
+    onDelete: showDeleteButton && onDelete && !isSaving ? handleDelete : undefined,
+    enabled: true
   })
 
   return (
@@ -82,6 +89,7 @@ export const NoteForm: React.FC<NoteFormProps> = ({
           disabled={isSaving || !isFormValid}
           size="sm"
           className="flex-1 mr-2"
+          title="Save note (Ctrl+Enter)"
         >
           {isSaving ? 'Saving...' : saveButtonText}
         </Button>
@@ -92,6 +100,7 @@ export const NoteForm: React.FC<NoteFormProps> = ({
             onClick={handleDelete}
             disabled={isSaving}
             className="text-destructive hover:text-destructive"
+            title="Delete note (Ctrl+Shift+Backspace)"
           >
             Delete
           </Button>

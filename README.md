@@ -22,6 +22,20 @@
 - 🗑️ **Easy Management** - Delete notes you no longer need
 - ☁️ **Cloud Sync** - Automatic synchronization across devices using browser sync storage
 - 🌐 **Cross-Browser** - Works on both Chrome and Firefox
+- ⌨️ **Keyboard Shortcuts** - Quick save and delete with keyboard commands
+
+---
+
+## ⌨️ Keyboard Shortcuts
+
+Speed up your note-taking workflow with these convenient keyboard shortcuts:
+
+| Shortcut | Action | Description |
+|----------|--------|-------------|
+| `Ctrl+Enter` (Mac: `Cmd+Enter`) | Save Note | Quickly save the current note |
+| `Ctrl+Shift+Backspace` (Mac: `Cmd+Shift+Backspace`) | Delete Note | Delete the current note |
+
+> **Tip**: Hover over the Save and Delete buttons to see the keyboard shortcuts!
 
 ---
 
@@ -319,8 +333,8 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 ### Version 0.4.0 (Current)
 - [x] Search and filter notes
 - [x] Import notes from JSON
-- [ ] Keyboard shortcuts
-- [X] Toast notifications
+- [x] Keyboard shortcuts
+- [x] Toast notifications
 - [ ] Note statistics
 
 ### Version 0.5.0 (Future)
