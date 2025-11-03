@@ -330,19 +330,17 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 
 ## 🗺️ Roadmap
 
-### Version 0.4.0 (Current)
+### Version 0.4.0 (Completed)
 - [x] Search and filter notes
 - [x] Import notes from JSON
 - [x] Keyboard shortcuts
 - [x] Toast notifications
-- [ ] Note statistics
 
-### Version 0.5.0 (Future)
+### Version 0.5.0 (Current)
 - [ ] Markdown support
 - [ ] Folders/categories
 - [ ] Favorites/starred notes
 - [ ] Trash with restore functionality
-- [ ] Dark mode
 
 ### Version 0.6.0+ (Future)
 - [ ] Smart tagging with autocomplete
