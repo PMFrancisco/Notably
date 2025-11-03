@@ -28,7 +28,7 @@ describe('Notably App', () => {
     // Wait for the component to load and check for main elements
     await waitFor(() => {
       expect(screen.getByText('Notably')).toBeInTheDocument();
-      expect(screen.getByText('All Notes')).toBeInTheDocument();
+      expect(screen.getByTitle('All Notes')).toBeInTheDocument();
     });
   });
 
@@ -50,9 +50,9 @@ describe('Notably App', () => {
     renderApp();
     
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Note title (optional)')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Title (optional)')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Write your note here...')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('tag1, tag2, tag3...')).toBeInTheDocument();
+      expect(screen.getByText('+ Add tag')).toBeInTheDocument();
     });
   });
 
@@ -60,7 +60,7 @@ describe('Notably App', () => {
     renderApp();
     
     await waitFor(() => {
-      const saveButton = screen.getByText('Save Note');
+      const saveButton = screen.getByText(/Save Note/i);
       expect(saveButton).toBeInTheDocument();
       expect(saveButton).toBeDisabled();
     });
@@ -77,7 +77,7 @@ describe('Notably App', () => {
     const noteTextarea = screen.getByPlaceholderText('Write your note here...');
     await user.type(noteTextarea, 'This is a test note');
 
-    const saveButton = screen.getByText('Save Note');
+    const saveButton = screen.getByText(/Save Note/i);
     expect(saveButton).toBeEnabled();
   });
 
@@ -86,13 +86,13 @@ describe('Notably App', () => {
     renderApp();
     
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Note title (optional)')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Title (optional)')).toBeInTheDocument();
     });
 
-    const titleInput = screen.getByPlaceholderText('Note title (optional)');
+    const titleInput = screen.getByPlaceholderText('Title (optional)');
     await user.type(titleInput, 'Test Title');
 
-    const saveButton = screen.getByText('Save Note');
+    const saveButton = screen.getByText(/Save Note/i);
     expect(saveButton).toBeEnabled();
   });
 
@@ -101,16 +101,28 @@ describe('Notably App', () => {
     renderApp();
     
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('tag1, tag2, tag3...')).toBeInTheDocument();
+      expect(screen.getByText('+ Add tag')).toBeInTheDocument();
     });
 
-    const tagsInput = screen.getByPlaceholderText('tag1, tag2, tag3...');
-    await user.type(tagsInput, 'react, testing, javascript');
+    // Click "+ Add tag" button to show the input
+    const addTagButton = screen.getByText('+ Add tag');
+    await user.click(addTagButton);
+
+    // Now the input appears with placeholder "Add tag..."
+    const tagsInput = screen.getByPlaceholderText('Add tag...');
+    await user.type(tagsInput, 'react{Enter}');
+    
+    //After first tag, need to click again to add more
+    await user.click(screen.getByText('+ Add tag'));
+    await user.type(screen.getByPlaceholderText('Add tag...'), 'testing{Enter}');
+    
+    await user.click(screen.getByText('+ Add tag'));
+    await user.type(screen.getByPlaceholderText('Add tag...'), 'javascript{Enter}');
 
     await waitFor(() => {
-      expect(screen.getByText('react')).toBeInTheDocument();
-      expect(screen.getByText('testing')).toBeInTheDocument();
-      expect(screen.getByText('javascript')).toBeInTheDocument();
+      expect(screen.getByText('#react')).toBeInTheDocument();
+      expect(screen.getByText('#testing')).toBeInTheDocument();
+      expect(screen.getByText('#javascript')).toBeInTheDocument();
     });
   });
 
@@ -119,14 +131,14 @@ describe('Notably App', () => {
     renderApp();
     
     await waitFor(() => {
-      expect(screen.getByText('All Notes')).toBeInTheDocument();
+      expect(screen.getByTitle('All Notes')).toBeInTheDocument();
     });
 
-    const allNotesButton = screen.getByText('All Notes');
+    const allNotesButton = screen.getByTitle('All Notes');
     await user.click(allNotesButton);
 
     await waitFor(() => {
-      expect(screen.getByText('← Back')).toBeInTheDocument();
+      expect(screen.getByTitle('Back')).toBeInTheDocument();
       expect(screen.getByText('No notes saved yet')).toBeInTheDocument();
       expect(screen.getByText('Export')).toBeInTheDocument();
     });
@@ -137,35 +149,35 @@ describe('Notably App', () => {
     renderApp();
     
     await waitFor(() => {
-      expect(screen.getByText('All Notes')).toBeInTheDocument();
+      expect(screen.getByTitle('All Notes')).toBeInTheDocument();
     });
 
     // Navigate to All Notes view
-    const allNotesButton = screen.getByText('All Notes');
+    const allNotesButton = screen.getByTitle('All Notes');
     await user.click(allNotesButton);
 
     await waitFor(() => {
-      expect(screen.getByText('← Back')).toBeInTheDocument();
+      expect(screen.getByTitle('Back')).toBeInTheDocument();
     });
 
     // Navigate back to main view
-    const backButton = screen.getByText('← Back');
+    const backButton = screen.getByTitle('Back');
     await user.click(backButton);
 
     await waitFor(() => {
       expect(screen.getByText('Notably')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Note title (optional)')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Title (optional)')).toBeInTheDocument();
       expect(screen.getByPlaceholderText('Write your note here...')).toBeInTheDocument();
     });
   });
 
-  it('shows appropriate labels for all form fields', async () => {
+  it('shows appropriate placeholders for all form fields', async () => {
     renderApp();
     
     await waitFor(() => {
-      expect(screen.getByText('Title')).toBeInTheDocument();
-      expect(screen.getByText('Content')).toBeInTheDocument();
-      expect(screen.getByText('Tags (comma separated)')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Title (optional)')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Write your note here...')).toBeInTheDocument();
+      expect(screen.getByText('+ Add tag')).toBeInTheDocument();
     });
   });
 
@@ -176,20 +188,24 @@ describe('Notably App', () => {
     renderApp();
     
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('Note title (optional)')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('Title (optional)')).toBeInTheDocument();
     });
 
     // Fill out the form
-    const titleInput = screen.getByPlaceholderText('Note title (optional)');
+    const titleInput = screen.getByPlaceholderText('Title (optional)');
     const noteTextarea = screen.getByPlaceholderText('Write your note here...');
-    const tagsInput = screen.getByPlaceholderText('tag1, tag2, tag3...');
 
     await user.type(titleInput, 'Test Note Title');
     await user.type(noteTextarea, 'This is my test note content');
-    await user.type(tagsInput, 'test, note');
+    
+    // Add tags - click button first, then type
+    await user.click(screen.getByText('+ Add tag'));
+    await user.type(screen.getByPlaceholderText('Add tag...'), 'test{Enter}');
+    await user.click(screen.getByText('+ Add tag'));
+    await user.type(screen.getByPlaceholderText('Add tag...'), 'note{Enter}');
 
     // Click save button
-    const saveButton = screen.getByText('Save Note');
+    const saveButton = screen.getByText(/Save Note/i);
     expect(saveButton).toBeEnabled();
     await user.click(saveButton);
 
@@ -223,11 +239,12 @@ describe('Notably App', () => {
     await waitFor(() => {
       expect(screen.getByDisplayValue('Existing Note')).toBeInTheDocument();
       expect(screen.getByDisplayValue('This is an existing note')).toBeInTheDocument();
-      expect(screen.getByDisplayValue('existing, test')).toBeInTheDocument();
+      expect(screen.getByText('#existing')).toBeInTheDocument();
+      expect(screen.getByText('#test')).toBeInTheDocument();
     });
 
     // Button should show "Update Note" instead of "Save Note"
-    expect(screen.getByText('Update Note')).toBeInTheDocument();
+    expect(screen.getByText(/Update Note/i)).toBeInTheDocument();
   });
 
   it('keeps save button disabled when only tags are entered', async () => {
@@ -235,13 +252,14 @@ describe('Notably App', () => {
     renderApp();
     
     await waitFor(() => {
-      expect(screen.getByPlaceholderText('tag1, tag2, tag3...')).toBeInTheDocument();
+      expect(screen.getByText('+ Add tag')).toBeInTheDocument();
     });
 
-    const tagsInput = screen.getByPlaceholderText('tag1, tag2, tag3...');
-    await user.type(tagsInput, 'solo-tag');
+    // Add a tag - click button first, then type
+    await user.click(screen.getByText('+ Add tag'));
+    await user.type(screen.getByPlaceholderText('Add tag...'), 'solo-tag{Enter}');
 
-    const saveButton = screen.getByText('Save Note');
+    const saveButton = screen.getByText(/Save Note/i);
     expect(saveButton).toBeDisabled();
   });
 });
