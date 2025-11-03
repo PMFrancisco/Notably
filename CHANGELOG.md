@@ -1,11 +1,19 @@
-# [0.4.0](https://github.com/PMFrancisco/Notably/compare/v0.3.0...v0.4.0) (2025-10-13)
+# [0.4.0](https://github.com/PMFrancisco/Notably/compare/v0.3.0...v0.4.0) (2025-11-03)
+
+
+### Bug Fixes
+
+* lint errors ([083af31](https://github.com/PMFrancisco/Notably/commit/083af311d76a637de065050bcdf71a5795b3b508))
+* remove unused var ([685dcb4](https://github.com/PMFrancisco/Notably/commit/685dcb49f8baf82abe0a1a4dc93867d231d3fba4))
 
 
 ### Features
 
-* add import notes functionality ([pending](https://github.com/PMFrancisco/Notably/commit/pending))
-* add inline toast notifications for user feedback ([pending](https://github.com/PMFrancisco/Notably/commit/pending))
-* improve import/export button states - both disable when either is processing ([pending](https://github.com/PMFrancisco/Notably/commit/pending))
+* add import notes ([f147c38](https://github.com/PMFrancisco/Notably/commit/f147c38758bed11a367d06dada3342563f03fc4d))
+* add save and delete shortcuts ([a93bf0a](https://github.com/PMFrancisco/Notably/commit/a93bf0a2fd542e6743e5ff6ae64bd884f561f568))
+* add search feature and update manifest.json ([fe632c5](https://github.com/PMFrancisco/Notably/commit/fe632c597ce75db9e3cbbb97a856e887b3c695e1))
+* add toast notification ([09f5245](https://github.com/PMFrancisco/Notably/commit/09f52451c14a88a199517db1e83fb5161ef05a13))
+
 
 
 # [0.3.0](https://github.com/PMFrancisco/Notably/compare/v0.2.0...v0.3.0) (2025-07-22)
