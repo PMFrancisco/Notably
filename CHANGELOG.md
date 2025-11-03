@@ -1,3 +1,13 @@
+## [0.5.1](https://github.com/PMFrancisco/Notably/compare/v0.5.0...v0.5.1) (2025-11-03)
+
+
+### Bug Fixes
+
+* dont show notably_trash ([17e740e](https://github.com/PMFrancisco/Notably/commit/17e740efec1474ac273150e15729bdf0989b595b))
+* dont show notably_trash ([2377d1e](https://github.com/PMFrancisco/Notably/commit/2377d1e1ed4f997a2d2b2a4ed1319f7731cd9433))
+
+
+
 # [0.5.0](https://github.com/PMFrancisco/Notably/compare/v0.4.1...v0.5.0) (2025-11-03)
 
 
@@ -48,15 +58,6 @@
 
 * change ThemeSelector to dropdown ([5a69bf6](https://github.com/PMFrancisco/Notably/commit/5a69bf688654473e85957db2d170ef3e1078bf6f))
 * delete textarea when you delete the note ([6697319](https://github.com/PMFrancisco/Notably/commit/6697319159881f4c5cdc722286a4d722bcc43b71))
-
-
-
-# [0.2.0](https://github.com/PMFrancisco/Notably/compare/v0.1.0...v0.2.0) (2025-07-14)
-
-
-### Features
-
-* add theme selector ([2045518](https://github.com/PMFrancisco/Notably/commit/2045518dd41de8b8afc2533b52333cf3311e3175))
 
 
 
