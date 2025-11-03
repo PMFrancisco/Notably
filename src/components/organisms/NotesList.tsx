@@ -2,7 +2,9 @@ import React, { useRef } from 'react'
 import { CardContent, Button } from '../atoms'
 import { NoteCard } from './NoteCard'
 import { EmptyState } from '../atoms'
+import { DomainGroup } from '../molecules'
 import { Note } from '../../types'
+import { groupNotesByDomain } from '../../utils'
 
 interface NotesListProps {
   notes: Record<string, Note>
@@ -29,6 +31,9 @@ export const NotesList: React.FC<NotesListProps> = ({
   
   const noteEntries = Object.entries(notes).filter(([, note]) => note.title || note.content)
   
+  // Group notes by domain
+  const groupedNotes = groupNotesByDomain(notes)
+  
   // Determine empty state message
   const emptyMessage = isFiltering 
     ? "No notes match your search" 
@@ -52,17 +57,34 @@ export const NotesList: React.FC<NotesListProps> = ({
 
   return (
     <>
-      <CardContent className={`space-y-3 h-72 overflow-y-auto ${className}`}>
+      <CardContent className={`h-72 overflow-y-auto ${className}`}>
         {noteEntries.length === 0 ? (
-          <EmptyState message={emptyMessage} />
+          <div className="py-3">
+            <EmptyState message={emptyMessage} />
+          </div>
+        ) : isFiltering ? (
+          // When searching, show flat list
+          <div className="space-y-3 p-3">
+            {noteEntries.map(([url, note]) => (
+              <NoteCard
+                key={url}
+                note={{ ...note, url }}
+                onDelete={onDeleteNote}
+              />
+            ))}
+          </div>
         ) : (
-          noteEntries.map(([url, note]) => (
-            <NoteCard
-              key={url}
-              note={{ ...note, url }}
-              onDelete={onDeleteNote}
-            />
-          ))
+          // When not searching, show grouped by domain
+          <div className="space-y-0">
+            {groupedNotes.map(([domain, domainNotes]) => (
+              <DomainGroup
+                key={domain}
+                domain={domain}
+                notes={domainNotes as Note[]}
+                onDeleteNote={onDeleteNote}
+              />
+            ))}
+          </div>
         )}
       </CardContent>
       

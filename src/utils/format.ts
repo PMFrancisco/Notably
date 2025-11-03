@@ -13,4 +13,29 @@ export const parseTags = (tagsString: string): string[] => {
 
 export const formatTagsForInput = (tags: string[]): string => {
   return tags.join(', ')
+}
+
+export const getDomainFromUrl = (url: string): string => {
+  try {
+    const urlObj = new URL(url)
+    return urlObj.hostname.replace('www.', '')
+  } catch {
+    return 'Unknown'
+  }
+}
+
+export const groupNotesByDomain = (notes: Record<string, { url: string; [key: string]: unknown }>) => {
+  const grouped: Record<string, Array<{ url: string; [key: string]: unknown }>> = {}
+  
+  Object.entries(notes).forEach(([url, note]) => {
+    const domain = getDomainFromUrl(url)
+    if (!grouped[domain]) {
+      grouped[domain] = []
+    }
+    grouped[domain].push({ ...note, url })
+  })
+  
+  // Sort domains alphabetically
+  return Object.entries(grouped)
+    .sort(([domainA], [domainB]) => domainA.localeCompare(domainB))
 } 

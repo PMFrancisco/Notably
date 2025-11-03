@@ -23,6 +23,7 @@
 - ☁️ **Cloud Sync** - Automatic synchronization across devices using browser sync storage
 - 🌐 **Cross-Browser** - Works on both Chrome and Firefox
 - ⌨️ **Keyboard Shortcuts** - Quick save and delete with keyboard commands
+- 📁 **Smart Organization** - Notes automatically grouped by website domain
 
 ---
 
@@ -284,10 +285,10 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 
 1. Open the extension popup
 2. Click "All Notes" button
-3. Browse all your saved notes
-4. Use the search bar to filter notes by title, content, or tags
-5. Click on any note to view details
-6. Use the delete button to remove notes
+3. Browse all your saved notes, **automatically grouped by website domain**
+4. Click on any domain name to expand/collapse notes from that site
+5. Use the search bar to filter notes (switches to flat list view when searching)
+6. Click the delete button to remove notes
 
 ### Exporting Notes
 
@@ -337,8 +338,8 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/):
 - [x] Toast notifications
 
 ### Version 0.5.0 (Current)
+- [x] Folders/categories (organized by domain)
 - [ ] Markdown support
-- [ ] Folders/categories
 - [ ] Favorites/starred notes
 - [ ] Trash with restore functionality
 
