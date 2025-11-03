@@ -29,7 +29,6 @@ function App() {
     saveNote, 
     loadNoteForUrl, 
     loadAllNotesData, 
-    deleteNote,
     toggleStar,
     trash,
     trashCount,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardContent, CardFooter, Button, Input, Textarea } from '../atoms'
+import { CardContent, CardFooter, Button, Input, Textarea } from '../atoms'
 import { TagInput } from '../molecules'
 import { useNoteForm, useKeyboardShortcuts } from '../../hooks'
 import { NoteFormData } from '../../types'
@@ -24,7 +24,6 @@ export const NoteForm: React.FC<NoteFormProps> = ({
   const {
     title,
     content,
-    tags,
     setTitle,
     setContent,
     setTags,
