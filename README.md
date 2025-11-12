@@ -2,7 +2,7 @@
 
 > A modern, cross-browser note-taking extension that helps you capture ideas, thoughts, and information on any website.
 
-![Version](https://img.shields.io/badge/version-0.4.1-blue.svg)
+![Version](https://img.shields.io/badge/version-0.5.1-blue.svg)
 ![License](https://img.shields.io/badge/license-ISC-green.svg)
 ![React](https://img.shields.io/badge/react-19.2.0-61dafb.svg)
 ![TypeScript](https://img.shields.io/badge/typescript-5.8.3-blue.svg)
